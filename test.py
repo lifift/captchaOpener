@@ -42,8 +42,8 @@ plt.imshow(trainIm[0],cmap='gray')
 plt.show()
 res=model.predict(trainIm[0].reshape(1,28,28))
 print(res)
-with I.open('im.png','r') as im:
-    imG=(np.asarray(PIL.ImageOps.grayscale(im)))/255.0
+with I.open('index.png','r') as im:
+    imG=1-((np.asarray(PIL.ImageOps.grayscale(im)))/255.0)
     res=model.predict(imG.reshape(1,28,28))
     print(res)
     plt.imshow(imG,cmap='gray')

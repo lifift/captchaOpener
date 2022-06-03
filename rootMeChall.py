@@ -52,20 +52,37 @@ sorted_ctrs = sorted(ctrs, key=(lambda ctr: cv2.boundingRect(ctr)[0]))
 print("boucle?")
 #print("Number of contours:" + str(len(ctrs)))
 iname=1
-
+letterlist=[]
+poslist=[]
 for i, ctr in enumerate(sorted_ctrs):
     x, y, w, h = cv2.boundingRect(ctr)
-
     roi = img[y:y + h, x:x + w]
-
     area = w*h
-
     if 70 < area < 500:
         #rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         dim =(28,28)
         resizedim = cv2.resize(roi,dim)
+        #cv2.imwrite('lettres_tmp/'+list(tmpchars)[iname]+'.png',resizedim)
+        letterlist.append(resizedim)
+        poslist.append((x,y,w,h))
+        iname+=1
+        
+### TOTRY
+
+for k in range(len(poslist)) :
+    for pos in poslist :
+        if (poslist[k][0]>pos[0]) and (poslist[k][0]<pos[0]+pos[2]) and (poslist[k][1]>pos[1]) and (poslist[k][1]<pos[1]+pos[3]) :
+            letterlist.del(k)
+            break
+            
+iname=1           
+for im in letterlist :
+    if im is not None:
         cv2.imwrite('lettres_tmp/'+list(tmpchars)[iname]+'.png',resizedim)
         iname+=1
+        
+
+### TOTRY
 
 
 resultat_final=""
@@ -86,7 +103,7 @@ for name in liste_images:
         #plt.show()
 
 print(resultat_final)
-
+"""
 data = 'cametu='+resultat_final
 # proxies = {
 #    'http': '127.0.0.1:8080',
@@ -104,3 +121,4 @@ headers= {
 response = requests.post("http://challenge01.root-me.org/programmation/ch8/",headers=headers,data=data,cookies=COKIE)
 
 print (response.text.split("<br></p><br/><img")[0])
+"""

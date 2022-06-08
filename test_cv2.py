@@ -1,6 +1,6 @@
 #import requests
 import base64
-#import numpy as np
+import numpy as np
 import cv2
 #import os
 
@@ -11,21 +11,30 @@ import cv2
 #jpg_as_np = np.frombuffer(img, dtype=np.uint8)
 #img = cv2.imdecode(jpg_as_np, flags=1)
 
-img = cv2.imread('captcha/1.png')
-gray = cv2.medianBlur(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),3)
-(thresh, bwimg) = cv2.threshold(gray, 180, 255, cv2.THRESH_BINARY)
-cv2.imshow('gray', gray)
-cv2.imshow('norm', img)
-cv2.imshow('b&w', bwimg)
+img = cv2.imread('c:/Users/Eliott/Desktop/python/captchaOpener/captcha/3.png')
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+#gray = cv2.medianBlur(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY),3)
+#(thresh, bwimg) = cv2.threshold(gray, 170, 255, cv2.THRESH_BINARY)
+bwimg = gray
 
-
-ret, thresh = cv2.threshold(bwimg, 0, 255, cv2.THRESH_OTSU)
 #cv2.imshow('thresh', thresh)
+#bwimg = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+bwimg = cv2.resize(bwimg,(3000,400))
+
+kernel = np.ones((7,7), np.uint8)
+kernel2 = np.ones((7,7), np.uint8)
+bwimg = cv2.dilate(bwimg, kernel, iterations=1)
+bwimg = cv2.medianBlur(bwimg,13)
+cv2.imshow('image1', cv2.resize(bwimg,(900,350)))
+cv2.waitKey(0)
+bwimg= cv2.resize(bwimg,(250,50))
+ret, thresh = cv2.threshold(bwimg, 0, 255, cv2.THRESH_OTSU)
+
 
 
 ctrs, hier = cv2.findContours(thresh.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 sorted_ctrs = sorted(ctrs, key=(lambda ctr: cv2.boundingRect(ctr)[0]))
-print("boucle?")
+
 #print("Number of contours:" + str(len(ctrs)))
 iname=1
 letterlist=[]
@@ -37,7 +46,7 @@ for i, ctr in enumerate(sorted_ctrs):
     if 70 < area < 500:
         #rect = cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         dim =(28,28)
-        resizedim = cv2.resize(roi,dim)
+        resizedim = cv2.resize(roi,(28,28))
         cv2.imshow('l',resizedim)
         cv2.waitKey(0)
         #cv2.imwrite('lettres_tmp/'+list(tmpchars)[iname]+'.png',resizedim)
